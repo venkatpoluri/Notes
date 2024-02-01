@@ -1,0 +1,179 @@
+
+Joins ( Left outer join )
+https://learn.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
+A left outer join is a join in which each element of the first collection is returned, regardless of whether it has any correlated elements in the second collection. You can use LINQ to perform a left outer join by calling the DefaultIfEmpty method on the results of a group join.
+
+https://learn.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
+
+Repository Design pattern:
+https://www.bacancytechnology.com/blog/entity-framework-core-in-net-6#:~:text=What%20is%20Repository%20Pattern%3F,class%20for%20the%20Employee%20entity.
+https://github.com/hardik-r/Employee-CRUD-API/tree/main/
+
+--------------------------------------------------------------------------------
+
+IQueryable Vs IEnumerable
+
+how primary key and foreign key works in EF and write query for join
+
+1. Lazy loading and eager loading and which one default in EF.
+   https://learn.microsoft.com/en-us/ef/core/querying/related-data/
+  Context : Entity Framework Core allows you to use the navigation properties in your model to load related entities
+   eager loading scenario based: I have Departments and users, queried the users got exception. That whould be the reason.
+   .Include(u=>u.users) should use navigation property to load related entities using eager loading concept.
+  Eager loading means that the related data is loaded from the database as part of the initial query.
+  Explicit loading means that the related data is explicitly loaded from the database at a later time.
+  Lazy loading means that the related data is transparently loaded from the database when the navigation property is accessed.
+
+ 
+2. Join two lists based on two keys 
+https://learn.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins#example---composite-key-join
+    We can use anonymous types to join two list. Departments and DeptMetaData having docId and versionId as common properties
+var query= from d in Dept
+	   join m in DeptMetaData on new
+           {
+	d.docId,
+	d.versionId
+	   }
+	equals new 
+		{
+			m.docId,
+	m.versionId
+		}
+select d.Name + " " + m.VersionId;
+
+3. Left outer join 
+ var QSOuterJoin = from emp in Employee.GetAllEmployees() //Left Data Source
+                              join add in Address.GetAddress() //Right Data Source
+                              on emp.AddressId equals add.ID //Inner Join Condition
+                              into EmployeeAddressGroup //Performing LINQ Group Join
+                              from address in EmployeeAddressGroup.DefaultIfEmpty() //Performing Left Outer Join
+                              select new { emp, address }; //Projecting the Result to Anonymous Type
+
+  
+https://learn.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
+A left outer join is a join in which each element of the first collection is returned, regardless of whether it has any correlated elements in the second collection. You can use LINQ to perform a left outer join by calling the DefaultIfEmpty method on the results of a group join.
+
+4. Scenario to explain linq query for inner join and left outer join
+  https://learn.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
+
+5. Difference between Iqueryable and Ienumerable ? which one good and why ?
+https://www.dotnettricks.com/learn/linq/ienumerable-vs-iqueryable
+IQueryable inside foreach
+List<Entity> list = dbContext.Entity.Where(x => x.Foo == "Foo").ToList()  vs List<Entity> list = dbContext.Entity.Where(x => x.Foo == "Foo")
+when you build a query using IQueryable<T>, the query is not executed immediately. Instead, it is executed when the query results are enumerated, typically using methods like ToList(), First(), or a foreach loop. This allows for optimization and efficient query execution.
+ the query is not executed immediately. Instead, it creates an expression tree that represents the query logic.
+IQueryable<T>, together with IQueryProvider interfaces gives you standards to implement your own query provider. IQueryable<T> presents your LINQ queries compiled into expression trees which then will be visited by IQueryProvider for translation and execution. IQueryable objects hold a reference to the underlying query provider (IQueryProvider type). When you materialize your query by iterating or calling First(), ToList(), Sum(), Count()… upon IQueryable object, the query provider then know to execute and return results in forms of enumerable objects (aha!)
+https://tech-mint.com/programming-languages/csharp/ienumerable-iqueryable-how-query-works/
+
+is used to query data from a data source, such as a database, utilizing query providers like LINQ to SQL or Entity Framework.
+
+https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ef/language-reference/query-execution
+
+6. Which one is good compare to Iqueryable query with store procedure and why 
+  https://www.dotnettricks.com/learn/linq/comparing-linq-with-stored-procedure
+
+7.	How primary key and foreign key works in EF and write query for join.
+8.	Lazy loading and eager loading and which one default in EF.
+
+
+SQL
+1.	How to pass list of records to store procedure to insert multiple records from store procedure. And what is parameter type of that list of records.
+     Xml, User defined Type as TABLE in SQL ( passing Data table from C#) https://www.c-sharpcorner.com/blogs/insert-multiple-rows-at-a-time-from-c-sharp-to-sqlhttps://dotnettutorials.net/lesson/bulk-insert-update-in-csharp-ado/#google_vignette
+// Xml is old way , use table valued parameter.  Other option is EF  using AddRange
+https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/table-valued-parameters
+
+CREATE PROCEDURE EmployeeIns
+  @EmployeeName NVARCHAR(50),
+  @Students XML
+AS
+/*
+  @Students : <Students>
+                  <Student Name='Studen 1'/>
+                  <Student Name='Studen 1'/>
+              </Students>
+*/
+
+
+
+2.	(Scenario based question) - Explain query get highest record from duplicate records.
+https://builtin.com/data-science/recursive-sql
+
+3.	Explain query which convert column to row. Unpivot 
+https://www.datameer.com/blog/sql_how-to-use-pivot-to-convert-rows-to-columns-in-sql-server-db/#:~:text=In%20the%20PIVOT%20part%2C%20we,shown%20in%20the%20pivoted%20output.
+https://www.edureka.co/blog/sql-pivot-and-unpivot/
+
+4.	(Scenario based question) – for left and inner join
+https://www.sqlservertutorial.net/sql-server-basics/sql-server-left-join/
+
+5. Troubleshhot slow running store procedure
+  a. check query execution plan, remove cached plan using sp_recompile
+  b. re-build index
+	 
+Angular:
+1. How to use custom component as a formcontrol in reactive form 
+ng-value_accessor provider, controlValueAccessor and onChanges and OnRegetserchanges, WriteTo
+mainly for rating and off/on like features.
+
+https://javascript.plainenglish.io/how-to-build-a-custom-angular-formcontrol-12c92620790
+https://stackblitz.com/edit/angular-szsw3k?file=src%2Fmain.ts
+https://www.digitalocean.com/community/tutorials/angular-custom-form-control
+
+2.
+
+C#:
+1.Explain one of design pattern. -  Singleton, Factory Method, Strategy, Facade, Mediator ( CQRS)
+2. Solid priciples - OOps main features abstractio, encapsulation, polymorphsm, inheritance.
+3. Interface over abstraction class - multiple inheritance, valueType only implements Value type and interface
+4.Protected and protected internal access modifiers
+5. await and async [ multi threading]
+
+API:
+1> authentication and authorization
+ authorization with policy using DB and HeimGuard
+ [Authorize(Policy = "CanGetLogicalTradingPartnerList")]
+and  services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MastercardSuperAdmin", policy =>
+                   policy.RequireAssertion(context =>
+                       context.User.HasClaim(c =>
+                           c.Type == "extension_Role" && c.Value == "Mastercard Super Admin")));
+
+2> Route and RoutePrefix
+For all UrlPathbase
+[Route("api/tradingpartners")]  // Controller level
+[Route("GetLogicalTradingPartners")] // Action
+
+3>  Authentication Token  access_token vs id_token
+Access token for API and id_token for UI
+ https://oauth.net/id-tokens-vs-access-tokens/
+https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html
+https://dev.to/oneadvanced/different-types-of-security-token-4on
+
+Angular:
+1. What is forkjoin and how it is work ? in forkjoin suppose one api from list of api is fail from server side then how forkjoin work.
+forkJoin(
+ this.http.post<any[]>(URL, jsonBody1, postJson).pipe(catchError(error => of(error))),
+ this.http.post<any[]>(URL, jsonBody2, postJson)
+)
+.subscribe(res => this.handleResponse(res))
+The second HTTP call will be called normally, even if an error occurs on the first call
+https://medium.com/geekculture/angular-prevent-loss-of-data-in-forkjoin-operator-when-few-of-the-multiple-inner-observables-fail-c38225a1adf1
+https://stackblitz.com/edit/angular-qktmqq?file=src%2Fapp%2Fapp.component.ts&source=post_page-----c38225a1adf1--------------------------------
+
+2. Observable vs promise
+https://angular.io/guide/comparing-observables
+
+3. Share data among not related components
+https://www.infragistics.com/community/blogs/b/infragistics/posts/simplest-way-to-share-data-between-two-unrelated-components-in-angular
+https://stackblitz.com/github/debugmodedotnet/componnetcommunicationwithservice?file=src%2Fapp%2Fappchild2%2Fappchild2.component.ts
+
+ 
+1.	Dynamic component, How to render dynamic component ? - 
+2.	Reactive Form, How to validate reactive form ? Validators.IsReuired and custom functions
+3.	How to use custom component as a formcontrol in reactive form ? ng_value_accessor, controlvalueAccessor
+4.	How to create autocomplete box ? what steps you take care to create autocomplete box ? - ng-autocoomplete
+5.	What is forkjoin and how it is work ? in forkjoin suppose one api from list of api is fail from server side then how forkjoin work.
+6.	How to create custom component from different module components ? viewChild('') ViewContainerRef, .CreateComponent()
+7.	How authentication work in angular, how to protect component to invalid access.  - CanActivate
+
+
