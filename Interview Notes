@@ -177,3 +177,28 @@ https://stackblitz.com/github/debugmodedotnet/componnetcommunicationwithservice?
 7.	How authentication work in angular, how to protect component to invalid access.  - CanActivate
 
 
+-----------------------------------------------------------
+
+1. API versioning using MapToVersion,
+builder.Services.AddApiVersioning(config =>
+{
+    config.DefaultApiVersion = new ApiVersion(1, 0);
+    config.AssumeDefaultVersionWhenUnspecified = true;
+    config.ApiVersionReader = ApiVersionReader.Combine(
+        new QueryStringApiVersionReader("api-version"),
+        new HeaderApiVersionReader("api-version"),
+        new MediaTypeApiVersionReader("api_version")
+        );
+    config.ReportApiVersions = true;
+});
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c=>
+{
+    c.ResolveConflictingActions (apiDescriptions => apiDescriptions.First ());
+});
+2. Static class loading and features
+3. Load large amount of data from sql server
+4. How to proceed with new requirement and collaberating with client.
+5. documentation work and SOP
+6. Day to day work of you
+7.How AWS lambda working.
