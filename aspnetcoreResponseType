@@ -1,0 +1,26 @@
+a. Response retun type
+https://learn.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-6.0
+C# doesn't support implicit cast operators on interfaces. Consequently, conversion of the interface to a concrete type is necessary to use ActionResult<T>. For example, use of IEnumerable in the following example doesn't work:
+[HttpGet]
+public ActionResult<IEnumerable<Product>> Get() =>
+    _repository.GetProducts();
+
+b. Accept Headers
+By default, when the framework detects that the request is coming from a browser:The Accept header is ignored.
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers(options =>
+{
+    options.RespectBrowserAcceptHeader = true;
+});
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
+
+[Produces("application/json")]
+Return JSON-formatted responses even if other formatters are configured and the client specifies a different format
